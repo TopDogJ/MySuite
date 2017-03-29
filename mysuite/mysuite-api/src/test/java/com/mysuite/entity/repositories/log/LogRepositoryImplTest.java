@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -34,11 +35,15 @@ public class LogRepositoryImplTest {
 
         logType.setName("SYSTEM");
         Log log = new Log();
+        log.setDate(new Date());
+        log.setTime(new Date());
         log.setMessage("System log created");
         logRepository.save(log);
 
         log.setLogType(logType);
         Log log2 = new Log();
+        log2.setDate(new Date());
+        log2.setTime(new Date());
         log2.setMessage("System log2 created");
         log2.setLogType(logType);
         logRepository.save(log2);
