@@ -1,9 +1,6 @@
 package com.mysuite.entity.beans.log;
 
 import com.mysuite.entity.support.EntityBean;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,16 +8,15 @@ import java.util.Date;
 /**
  * Created by jianl on 29/03/2017.
  */
-@Entity
-public class Log extends EntityBean {
+@MappedSuperclass
+public abstract class Log extends EntityBean {
 
     @Temporal(TemporalType.DATE)
     private Date date;
     @Temporal(TemporalType.TIME)
     private Date time;
-    @ManyToOne
-    @Cascade(CascadeType.SAVE_UPDATE)
-    private LogType logType;
+    @Enumerated(value = EnumType.STRING)
+    private LogLevel logLevel;
     @Column(nullable = false)
     private String message;
 
@@ -40,12 +36,12 @@ public class Log extends EntityBean {
         this.time = time;
     }
 
-    public LogType getLogType() {
-        return logType;
+    public LogLevel getLogLevel() {
+        return logLevel;
     }
 
-    public void setLogType(LogType logType) {
-        this.logType = logType;
+    public void setLogLevel(LogLevel logLevel) {
+        this.logLevel = logLevel;
     }
 
     public String getMessage() {
@@ -59,7 +55,7 @@ public class Log extends EntityBean {
     protected void appendToString(StringBuffer stringBuffer) {
         stringBuffer.append(", date=" + date);
         stringBuffer.append(", time=" + time);
-        stringBuffer.append(", logType=" + logType.toString());
+        stringBuffer.append(", logLevel=" + logLevel.toString());
         stringBuffer.append(", message=" + message);
     }
 }

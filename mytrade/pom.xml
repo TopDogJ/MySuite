@@ -160,6 +160,7 @@
             <artifactId>jackson-jr-all</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>

@@ -1,4 +1,4 @@
-package com.mysuite.entity.support;
+package com.mysuite.commons.entity;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

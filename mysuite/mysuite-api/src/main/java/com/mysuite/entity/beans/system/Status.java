@@ -1,11 +1,9 @@
 package com.mysuite.entity.beans.system;
 
 import com.mysuite.entity.support.EntityBean;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.lang.annotation.Annotation;
 
 /**
  * Created by jianl on 29/03/2017.

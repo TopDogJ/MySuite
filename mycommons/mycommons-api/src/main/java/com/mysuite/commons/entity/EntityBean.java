@@ -1,8 +1,7 @@
-package com.mysuite.entity.support;
+package com.mysuite.commons.entity;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +36,7 @@ public abstract class EntityBean implements Serializable{
 	@Override
 	public String toString() {
 		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append(this.getClass().getName());
+		stringBuffer.append(this.getClass().getSimpleName());
 		stringBuffer.append("{");
 		stringBuffer.append("id=" + id);
 		this.appendToString(stringBuffer);

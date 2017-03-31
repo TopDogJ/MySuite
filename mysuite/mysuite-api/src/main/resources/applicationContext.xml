@@ -5,6 +5,7 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -13,7 +14,9 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx.xsd">
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 
     <bean id="mysqlDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -47,4 +50,9 @@
 
     <context:component-scan base-package="com.mysuite.entity.repositories"/>
 
+    <!--如果不写proxy-target-class="true"这句话也没问题-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!--切面-->
+    <bean id="systemLogInterceptor" class="com.mysuite.service.internal.logging.SystemLogInterceptor"/>
 </beans>
