@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js canvas - materials - video</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+
+		<script src="./script/vendor/three/three.js"></script>
+		<script src="./script/vendor/three/Projector.js"></script>
+		<script src="./script/vendor/three/CanvasRenderer.js"></script>
+		<script src="./script/vendor/three/OrbitControls.js"></script>
+		<script src="./script/vendor/three/stats.min.js"></script>
+
+		<video id="video" autoplay loop webkit-playsinline style="display:none">
+			<source src="./script/vendor/three/textures/sintel.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+			<source src="./script/vendor/threetextures/sintel.ogv" type='video/ogg; codecs="theora, vorbis"'>
+		</video>
+
+		<script>
+
+			var AMOUNT = 100;
+			var container, stats;
+			var camera, scene, renderer;
+			var cube, video, image, imageContext, imageReflection, imageReflectionContext, imageReflectionGradient, texture, textureReflection;
+			var mesh;
+
+			var mouseX = 0;
+			var mouseY = 0;
+
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				scene = new THREE.Scene();
+
+				var axis = new THREE.AxisHelper(10);
+				scene.add(axis);
+
+				//Geometry
+				var cubeGeometry = new THREE.BoxGeometry(20,20,20);
+				var cubeMaterial = new THREE.MeshLambertMaterial({color:0xff3300});
+				cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+
+				cube.position.x = -340;
+				cube.position.y = -160;
+				cube.position.z = 20;
+				cube.castShadow = true;
+				scene.add(cube);
+
+				var grid = new THREE.GridHelper(2000,5, 0xfffff, 0xff3300);
+				grid.position.x = 0;
+				grid.position.y = -170;
+    			scene.add(grid);
+
+
+				video = document.getElementById( 'video' );
+
+				image = document.createElement( 'canvas' );
+				image.width = 480;
+				image.height = 204;
+
+				imageContext = image.getContext( '2d' );
+				imageContext.fillStyle = '#000000';
+				imageContext.fillRect( 0, 0, 480, 204 );
+
+				texture = new THREE.Texture( image );
+				texture.minFilter = THREE.LinearFilter;
+				texture.magFilter = THREE.LinearFilter;
+				texture.format = THREE.RGBFormat;
+
+				var material = new THREE.MeshBasicMaterial( { map: texture, overdraw: 0.5 } );
+
+				imageReflection = document.createElement( 'canvas' );
+				imageReflection.width = 480;
+				imageReflection.height = 204;
+
+				imageReflectionContext = imageReflection.getContext( '2d' );
+				imageReflectionContext.fillStyle = '#000000';
+				imageReflectionContext.fillRect( 0, 0, 480, 204 );
+
+				imageReflectionGradient = imageReflectionContext.createLinearGradient( 0, 0, 0, 204 );
+				imageReflectionGradient.addColorStop( 0.2, 'rgba(240, 240, 240, 1)' );
+				imageReflectionGradient.addColorStop( 1, 'rgba(240, 240, 240, 0.8)' );
+
+				//Light
+				spotLight = new THREE.SpotLight(0xffffff);
+				spotLight.castShadow = true;
+				spotLight.position.set (-800, 600, 0);
+				spotLight.castShadow = true;
+				spotLight.target = cube;
+				spotLight.intensity= 100;
+				scene.add(spotLight);
+
+				spotLight2 = new THREE.SpotLight(0xFFFFFF);
+				spotLight2.castShadow = true;
+				spotLight2.position.set (1600, 600, 800);
+				spotLight2.castShadow = true;
+				spotLight2.target = cube;
+				scene.add(spotLight2);
+
+				<!--var spotLightHelper = new THREE.SpotLightHelper( spotLight );-->
+    			<!--scene.add( spotLightHelper );-->
+    			<!--var spotLightHelper2 = new THREE.SpotLightHelper( spotLight2 );-->
+    			<!--scene.add( spotLightHelper2 );-->
+
+				textureReflection = new THREE.Texture( imageReflection );
+
+				var materialReflection = new THREE.MeshBasicMaterial({ map: textureReflection, side: THREE.BackSide, overdraw: 0.5 } );
+
+				var plane = new THREE.PlaneGeometry( 480, 204, 4, 4 );
+				plane.receiveShadow=true;
+
+				mesh = new THREE.Mesh( plane, material );
+				mesh.scale.x = mesh.scale.y = mesh.scale.z = 1.5;
+				scene.add(mesh);
+
+				mesh = new THREE.Mesh( plane, materialReflection );
+				mesh.position.y = -306;
+				mesh.rotation.x = - Math.PI;
+				mesh.scale.x = mesh.scale.y = mesh.scale.z = 1.5;
+				scene.add( mesh );
+
+				//
+
+				var separation = 150;
+				var amountx = 10;
+				var amounty = 10;
+
+				var PI2 = Math.PI * 2;
+				var material = new THREE.SpriteCanvasMaterial( {
+
+					color: 0x0808080,
+					program: function ( context ) {
+
+						context.beginPath();
+						context.arc( 0, 0, 0.5, 0, PI2, true );
+						context.fill();
+
+					}
+
+				} );
+
+				for ( var ix = 0; ix < amountx; ix++ ) {
+
+					for ( var iy = 0; iy < amounty; iy++ ) {
+						particle = new THREE.Sprite( material );
+						particle.position.x = ix * separation - ( ( amountx * separation ) / 2 );
+						particle.position.y = -153;
+						particle.position.z = iy * separation - ( ( amounty * separation ) / 2 );
+						particle.scale.x = particle.scale.y = 2;
+						scene.add( particle );
+					}
+				}
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+				//Camera
+				camera.position.x = 40;
+				camera.position.y = 40;
+				camera.lookAt(scene.position);
+				camera.position.z = 800;
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.shadowMapEnabled = true;
+    			renderer.shadowMapSoft = true;
+				renderer.setClearColor( 0xf0f0f0 );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+
+				// Orbit Control
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+				controls.addEventListener( 'change', render );
+
+
+				<!--stats = new Stats();-->
+				<!--container.appendChild( stats.dom );-->
+
+				<!--document.addEventListener( 'mousemove', onDocumentMouseMove, false );-->
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				windowHalfX = window.innerWidth / 2;
+				windowHalfY = window.innerHeight / 2;
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function onDocumentMouseMove( event ) {
+				mouseX = ( event.clientX - windowHalfX );
+				mouseY = ( event.clientY - windowHalfY ) * 0.2;
+			}
+
+			//
+
+			function animate() {
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+				cube.rotation.z += 0.01;
+				requestAnimationFrame( animate );
+				render();
+				stats.update();
+			}
+
+			function render() {
+
+				camera.position.x += ( mouseX - camera.position.x ) * 0.05;
+				camera.position.y += ( - mouseY - camera.position.y ) * 0.05;
+
+				camera.lookAt( scene.position );
+
+				if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
+
+					imageContext.drawImage( video, 0, 0 );
+
+					if ( texture ) texture.needsUpdate = true;
+					if ( textureReflection ) textureReflection.needsUpdate = true;
+
+				}
+
+				imageReflectionContext.drawImage( image, 0, 0 );
+				imageReflectionContext.fillStyle = imageReflectionGradient;
+				imageReflectionContext.fillRect( 0, 0, 480, 204 );
+
+				renderer.render( scene, camera );
+			}
+
+
+		</script>
+
+	</body>
+</html>

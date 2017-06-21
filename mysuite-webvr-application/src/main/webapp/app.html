@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MySuite</title>
+    <script src="./script/vendor/jquery/jquery.js"></script>
+    <script src="./script/vendor/three/three.js"></script>
+    <script src="./script/vendor/aframe/aframe-v0.5.0.js"></script>
+    <script src="./script/web-audio/build.js"></script>
+    <script src="./script/web-audio/audioanalyser-volume-bind.js"></script>
+    <script src="./script/web-audio/audioanalyser-waveform.js"></script>
+    <script src="./script/web-audio/color-on-beat.js"></script>
+    <script src="./script/app.js"></script>
+</head>
+<body>
+    <a-scene id="mainScene" antialias="true">
+
+        <a-assets id="assets">
+            <audio id="song" src="./asset/music/demo2.mp3" autoplay></audio>
+            <img id="backToTImage" src="./asset/backToTheHomeSweetHome.jpg">
+        </a-assets>
+
+
+        <a-entity id="analyser"
+                  audioanalyser="src: #song"
+                  audioanalyser-waveform="radius: 0.1"
+                  rotation="-90 -45 -180"
+                  position="0 40 -50"
+        ></a-entity>
+
+        <a-entity id="analyser2"
+                  audioanalyser="src: #song"
+                  audioanalyser-waveform="radius: 0.1"
+                  rotation="-90 -45 -180"
+                  position="2 40 -50"
+        ></a-entity>
+
+        <a-plane id="musicPlane"
+                height="0.5" width="2" opacity="0.8"
+                position="-10 -2 -2" color="#ffffff">
+            <a-text value="music" align="center" zOffet="-10"></a-text>
+        </a-plane>
+
+        <a-light
+                audioanalyser-volume-bind="analyserEl: #analyser; component: light; property: intensity; max: 2.2; multiplier: .018"
+                type="ambient"
+                position="1 2 1"
+                color="#0000ff"
+                target="#analyser"
+        ></a-light>
+
+
+        <a-sky id="homeBox"src="#backToTImage" radius="5000"></a-sky>
+
+        <a-camera position="0 0 10"></a-camera>
+
+    </a-scene>
+
+</body>
+</html>

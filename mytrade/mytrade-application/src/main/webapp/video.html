@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap 101 Template</title>
+
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <link href="./css/jquery.dataTables.css" rel="stylesheet">
+    <link href="./css/dataTables.bootstrap.css" rel="stylesheet">
+</head>
+<body id="body">
+    <video width="document.body.clientWidth" height="document.body.clientHeight" id="video" autoplay="autoplay"></video>
+<script src="./script/jquery.js"></script>
+<script src="./script/bootstrap.js"></script>
+<script src="./script/jquery.dataTables.min.js"></script>
+<script src="./script/dataTables.bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            var video = document.getElementById('video'),
+            vendorUrl = window.URL || webkitURL;
+            navigator.getMedia = navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia ||
+                navigator.msGetUserMedia;
+                navigator.getMedia({
+                    video:true
+                }, function(stream){
+                    video.src = vendorUrl.createObjectURL(stream);
+                    video.play();
+                }, function(error){
+                    console.log(error.code);
+                });
+        });
+
+    </script>
+
+</body>
+</html>

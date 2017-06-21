@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <link href="./css/jquery.dataTables.css" rel="stylesheet">
+    <link href="./css/dataTables.bootstrap.css" rel="stylesheet">
+    <title>MyTrade @MySuite.com</title>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="col-lg-2 text-left">
+
+    </div>
+    <div class="col-lg-7 text-left">
+        <div class="btn-group" role="group" aria-label="...">
+            <button type="button" class="btn btn-primary" id="configButton" disabled="disabled"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span></button>
+        </div>
+    </div>
+
+    <div class="col-lg-3 text-right">
+        <div class="input-group">
+            <input type="text" class="form-control" id="searchInput" placeholder="股票代码">
+            <span class="input-group-btn">
+            <button class="btn btn-default" id="searchButton" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+          </span>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="panel panel-default" id="viewLeft">
+                <div class="panel-heading">自选股</div>
+                <div class="panel-body">
+                    <table id="userSecurityTable" class='table table-condensed table-hover'>
+                        <thead id="userSecurityTableHeader">
+                            <tr>
+                                <th>名称</th>
+                                <th>代码</th>
+                                <th>价格</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userSecurityTableBody"></tbody>
+                    </table>
+                    点击 “+” 加自选
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">涨跌榜</div>
+                <div class="panel-body">
+                    Panel content
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8" id="viewMain"></div>
+        <div class="col-md-2" id="viewRight"></div>
+    </div>
+</div>
+
+<nav class="navbar navbar-inverse navbar-fixed-bottom text-center">
+    <div class="btn-group " role="group" aria-label="...">
+        <button type="button" class="btn btn-primary" id="commentButton" disabled="disabled"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></button>
+        <button type="button" class="btn btn-primary" id="alertButton" disabled="disabled"><span class="glyphicon glyphicon-bell" aria-hidden="true"></span></button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#logonModel" data-placement="top" title="登录"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></button>
+        <button type="button" class="btn btn-primary" id="addSecurityButton" disabled="disabled" data-toggle="tooltip" data-placement="top" title="加自选"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+        <button type="button" class="btn btn-primary" id="boardCastButton" disabled="disabled" data-toggle="tooltip" data-placement="top" title="开直播"><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span></button>
+    </div>
+</nav>
+
+<!-- Modals -->
+<div class="modal fade" id="logonModel" tabindex="1" role="dialog" aria-labelledby="logonModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">登录</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="logonForm">
+                    <div class="form-group">
+                       <div class="col-sm-12">
+                            <input type="username" class="form-control" id="usernameInput" placeholder="用户名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input type="password" class="form-control" id="passwordInput" placeholder="密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <label class="checkbox-inline"><input type="checkbox" id="memberMeCheckBox">记住我</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="logonButton" class="btn btn-primary">登录</button>
+                <button type="button" id="logonDismissButton" class="btn btn-primary" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./script/jquery.js"></script>
+<script src="./script/bootstrap.js"></script>
+<script src="./script/echarts.min.js"></script>
+<script src="./script/sockjs-1.0.0.min.js"></script>
+<script src="./script/jquery.dataTables.min.js"></script>
+<script src="./script/dataTables.bootstrap.min.js"></script>
+<script src="./script/app.js"></script>
+</body>
+</html>
